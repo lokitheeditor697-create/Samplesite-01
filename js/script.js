@@ -17,91 +17,31 @@ window.addEventListener("load", revealOnScroll);
 
 
 
-
-document.querySelectorAll(".showcase-item img").forEach(img => {
-  img.addEventListener("click", () => {
-    modal.style.display = "block";
-    modalImg.src = img.src;
-  });
-});
-
-closeModal.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
-window.addEventListener("click", (e) => {
-  if (e.target === modal) modal.style.display = "none";
-});
-
-// Showcase Carousel Logic
-const track = document.querySelector('.carousel-track');
-const prevBtn = document.querySelector('.carousel-btn.left');
-const nextBtn = document.querySelector('.carousel-btn.right');
-const visibleCards = 3;
-
-function moveCarousel(direction) {
-  const totalCards = cards.length;
-  const maxIndex = totalCards - visibleCards;
-
-  currentIndex += direction;
-  if (currentIndex < 0) currentIndex = 0;
-  if (currentIndex > maxIndex) currentIndex = maxIndex;
-
-  const slideWidth = cards[0].offsetWidth + 25;
-  track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-}
-
-nextBtn.addEventListener('click', () => moveCarousel(1));
-prevBtn.addEventListener('click', () => moveCarousel(-1));
-
-
-
-cards.forEach(card => {
-  card.addEventListener("click", () => {
-    modal.style.display = "block";
-    modalImg.src = card.querySelector("img").src;
-  });
-});
-
-closeModal.addEventListener("click", () => modal.style.display = "none");
-window.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
-
-
-
-
-// clients.js
-// Toggles logos between grayscale and color when clicked
 document.addEventListener("DOMContentLoaded", () => {
-  const logos = document.querySelectorAll("#clients img");
+  const track = document.querySelector(".logo-track");
 
-  logos.forEach((logo) => {
-    const colorSrc = logo.getAttribute("data-color");
-    const bwSrc = logo.getAttribute("src");
+  // Duplicate for seamless loop
+  track.innerHTML += track.innerHTML;
 
-    logo.addEventListener("click", () => {
-      const currentSrc = logo.getAttribute("src");
-      if (currentSrc === bwSrc) {
-        // Switch to color
-        logo.setAttribute("src", colorSrc);
-        logo.style.filter = "none";
-        logo.style.opacity = "1";
-        logo.style.transform = "scale(1.08)";
-      } else {
-        // Switch back to grayscale
-        logo.setAttribute("src", bwSrc);
-        logo.style.filter = "grayscale(100%) brightness(90%)";
-        logo.style.opacity = "0.7";
-        logo.style.transform = "scale(1)";
-      }
-    });
+  let speed = .5;
+  let pos = 0;
 
-    // Reset transform on mouse leave
-    logo.addEventListener("mouseleave", () => {
-      logo.style.transform = "scale(1)";
-    });
-  });
+  function scroll() {
+    pos -= speed;
+    track.style.transform = `translateX(${pos}px)`;
+
+    if (Math.abs(pos) > track.scrollWidth / 2) {
+      pos = 0;
+    }
+    requestAnimationFrame(scroll);
+  }
+
+  scroll();
+
+  // Pause on hover
+  track.addEventListener("mouseenter", () => speed = 0);
+  track.addEventListener("mouseleave", () => speed = 0.5);
 });
-
 
 
 
